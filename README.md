@@ -69,3 +69,7 @@ go build -o api-gateway.exe cmd/main.go
 Email: root@root.com
 password: root123
 ```
+### Postman Collection
+```
+https://.postman.co/workspace/My-Workspace~27f72f6c-384a-44f6-8ab5-df9444976f7a/collection/39904644-d6d7f568-8616-4c4e-9d43-0d3d77424152?action=share&creator=39904644
+```
