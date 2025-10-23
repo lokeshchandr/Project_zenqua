@@ -1,0 +1,9 @@
+
+## Environment Variables
+
+```bash
+JWT_SECRET=change-this-secret            
+PRODUCT_SERVICE_URL=http://localhost:8002 
+PORT=8003                                 
+```
+

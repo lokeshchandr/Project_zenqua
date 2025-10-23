@@ -1,0 +1,219 @@
+{
+  "info": {
+    "name": "Ecommerce API Gateway",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "4a2d8f1b-8a0f-4b58-b4f8-5c6e9fce4c2f"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register (User)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"user\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register (Seller)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Seller One\",\n  \"email\": \"seller@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"saler\",\n  \"gst_number\": \"GST-123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Any)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let json = {};",
+                  "try { json = pm.response.json(); } catch (e) { }",
+                  "if (json && json.token) { pm.environment.set('jwt_token', json.token); pm.collectionVariables.set('jwt_token', json.token); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"Password123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Notifications (me)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/notifications", "host": ["{{base_url}}"], "path": ["notifications"] }
+          }
+        },
+        {
+          "name": "Admin: Approve Seller",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "PUT",
+            "url": { "raw": "{{base_url}}/admin/approve-admin/{{user_id}}", "host": ["{{base_url}}"], "path": ["admin", "approve-admin", "{{user_id}}"] }
+          }
+        },
+        {
+          "name": "Admin: Pending Approvals",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/admin/approve-request", "host": ["{{base_url}}"], "path": ["admin", "approve-request"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List Products",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/products", "host": ["{{base_url}}"], "path": ["products"] }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/products/{{product_id}}", "host": ["{{base_url}}"], "path": ["products", "{{product_id}}"] }
+          }
+        },
+        {
+          "name": "Create Product (seller/admin)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "url": { "raw": "{{base_url}}/products", "host": ["{{base_url}}"], "path": ["products"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sample Product\",\n  \"description\": \"A great item\",\n  \"price\": 199.99,\n  \"quantity\": 10\n}" }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "PATCH",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "url": { "raw": "{{base_url}}/products/{{product_id}}", "host": ["{{base_url}}"], "path": ["products", "{{product_id}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 149.99\n}" }
+          }
+        },
+        {
+          "name": "Update Stock",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "PATCH",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "url": { "raw": "{{base_url}}/products/{{product_id}}/stock", "host": ["{{base_url}}"], "path": ["products", "{{product_id}}", "stock"] },
+            "body": { "mode": "raw", "raw": "{\n  \"quantity\": 25\n}" }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/products/{{product_id}}", "host": ["{{base_url}}"], "path": ["products", "{{product_id}}"] }
+          }
+        },
+        {
+          "name": "My Products (seller)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/products/allProducts", "host": ["{{base_url}}"], "path": ["products", "allProducts"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Create Order (user)",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "POST",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "url": { "raw": "{{base_url}}/orders", "host": ["{{base_url}}"], "path": ["orders"] },
+            "body": { "mode": "raw", "raw": "{\n  \"product_id\": 1,\n  \"quantity\": 2,\n  \"payment_method\": \"COD\"\n}" }
+          }
+        },
+        {
+          "name": "List My Orders / All Orders",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/orders", "host": ["{{base_url}}"], "path": ["orders"] }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/orders/{{order_id}}", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}"] }
+          }
+        },
+        {
+          "name": "Admin: Update Order Status",
+          "request": {
+            "auth": { "type": "bearer", "bearer": [{"key":"token","value":"{{jwt_token}}","type":"string"}] },
+            "method": "PATCH",
+            "header": [{"key":"Content-Type","value":"application/json"}],
+            "url": { "raw": "{{base_url}}/orders/{{order_id}}/status", "host": ["{{base_url}}"], "path": ["orders", "{{order_id}}", "status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"Completed\"\n}" }
+          }
+        }
+      ]
+    }
+  ]
+}
