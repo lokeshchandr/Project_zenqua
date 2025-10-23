@@ -81,6 +81,3 @@ go build -o api-gateway.exe cmd/main.go
 Email: root@root.com
 password: root123
 ```
-
-
-### Api collection
