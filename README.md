@@ -19,18 +19,6 @@ go mod tidy
 
 ```
 
-## Configuration
-
-Update `.env` with your settings:
-
-```env
-JWT_SECRET=change-this-secret  # Must match Auth service secret
-PORT=8000
-AUTH_SERVICE_URL=http://localhost:8001
-PRODUCT_SERVICE_URL=http://localhost:8002
-ORDER_SERVICE_URL=http://localhost:8003
-```
-
 ## Running the Gateway
 
 ```powershell
